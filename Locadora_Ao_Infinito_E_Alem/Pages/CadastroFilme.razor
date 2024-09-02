@@ -1,5 +1,7 @@
 ﻿@page "/cadastroFilme"
+@using Locadora_Ao_Infinito_E_Alem.Controllers
 @using Locadora_Ao_Infinito_E_Alem.Models
+@inject FilmeController filmeController;
 @inject NavigationManager navegacao;
 
 
@@ -69,5 +71,5 @@
 </div>
 
 @code {
-    Filme filme { get; set; }
+    private Filme filme = new Filme();
 }

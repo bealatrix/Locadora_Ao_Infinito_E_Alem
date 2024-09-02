@@ -1,5 +1,7 @@
 ﻿@page "/cadastroCliente"
+@using Locadora_Ao_Infinito_E_Alem.Controllers
 @using Locadora_Ao_Infinito_E_Alem.Models
+@inject ClienteController clienteController;
 @inject NavigationManager navegacao;
 
 
@@ -69,7 +71,7 @@
 </div>
 
 @code {
-    Cliente? cliente { get; set; }
+    private Cliente cliente = new Cliente();
 }
 
 

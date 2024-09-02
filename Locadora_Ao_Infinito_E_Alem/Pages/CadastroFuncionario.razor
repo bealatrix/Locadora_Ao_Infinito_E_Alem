@@ -1,5 +1,7 @@
 ﻿@page "/cadastroFuncionario"
+@using Locadora_Ao_Infinito_E_Alem.Controllers
 @using Locadora_Ao_Infinito_E_Alem.Models
+@inject FuncionarioController funcionarioController;
 @inject NavigationManager navegacao;
 
 
@@ -69,5 +71,5 @@
 </div>
 
 @code {
-    Funcionario funcionario { get; set; }
+    private Funcionario funcionario = new Funcionario();
 }

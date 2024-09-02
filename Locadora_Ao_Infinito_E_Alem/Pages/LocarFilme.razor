@@ -1,5 +1,7 @@
 ﻿@page "/locarFilme"
+@using Locadora_Ao_Infinito_E_Alem.Controllers
 @using Locadora_Ao_Infinito_E_Alem.Models
+@inject LocacaoController locacaoController;
 @inject NavigationManager navegacao;
 
 <h3>Locação de Filme</h3>
@@ -45,8 +47,8 @@
 
 
 @code {
-    LocacaoFilme filmeLocado { get; set; }
-    Filme filme { get; set; }
+    private LocacaoFilme filmeLocado = new LocacaoFilme();
+    private Filme filme = new Filme();
     bool novo = false;
 
     void Salvar()
