@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Locadora_Ao_Infinito_E_Alem.Models
 {
-    internal class locacao_filme
+    public class locacao_filme
     {
 
     }

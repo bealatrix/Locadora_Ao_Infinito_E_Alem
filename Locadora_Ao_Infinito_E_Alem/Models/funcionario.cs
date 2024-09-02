@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Locadora_Ao_Infinito_E_Alem.Models
 {
-    internal class funcionario
+    public class funcionario
     {
         public int ID { get; set; }
         public string nome { get; set; }

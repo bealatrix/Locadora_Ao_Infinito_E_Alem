@@ -1,6 +1,9 @@
 using Locadora_Ao_Infinito_E_Alem.Data;
+using Locadora_Ao_Infinito_E_Alem.Controllers;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Web;
+using Microsoft.EntityFrameworkCore;
+using Locadora_Ao_Infinito_E_Alem.Contexto;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -8,6 +11,10 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddRazorPages();
 builder.Services.AddServerSideBlazor();
 builder.Services.AddSingleton<WeatherForecastService>();
+
+string mySqlConexao = builder.Configuration.GetConnectionString("BaseConexaoMySql");
+builder.Services.AddDbContextPool<ContextoBD>(options => options.UseMySql(mySqlConexao, ServerVersion.AutoDetect(mySqlConexao)));
+
 
 var app = builder.Build();
 

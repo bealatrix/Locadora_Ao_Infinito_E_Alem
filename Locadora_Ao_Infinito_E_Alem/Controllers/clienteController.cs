@@ -8,5 +8,6 @@ namespace Locadora_Ao_Infinito_E_Alem.Controllers
 {
     internal class clienteController
     {
+
     }
 }
