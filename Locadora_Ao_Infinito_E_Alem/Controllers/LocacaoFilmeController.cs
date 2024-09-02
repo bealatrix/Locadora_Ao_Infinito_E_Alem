@@ -4,10 +4,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Locadora_Ao_Infinito_E_Alem.Models
+namespace Locadora_Ao_Infinito_E_Alem.Controllers
 {
-    public class locacao_filme
+    internal class LocacaoFilmeController
     {
-
     }
 }
