@@ -1,4 +1,4 @@
-﻿@page "/locacaoFilme"
+﻿@page "/locarFilme"
 @using Locadora_Ao_Infinito_E_Alem.Models
 @inject NavigationManager navegacao;
 
@@ -10,22 +10,22 @@
 
     <div class="mb-3">
         <label for="idLocFilmeInput" class="form-label">ID Locação:</label>
-        <input @bind="locacao.ID" type="text" class="form-control" id="idLocFilmeInput" disabled>
+        <input @bind="filmeLocado.ID" type="text" class="form-control" id="idLocFilmeInput" disabled>
     </div>
 
     <div class="mb-3">
         <label for="idFilmeInput" class="form-label">ID do Filme:</label>
-        <input @bind="locacao.IDFilme" type="text" class="form-control" id="idFilmeInput">
+        <input @bind="filme.ID" type="text" class="form-control" id="idFilmeInput">
     </div>
 
     <div class="mb-3">
         <label for="quantidadeInput" class="form-label">Quantidade:</label>
-        <input @bind="locacao.quantidade" type="number" class="form-control" id="quantidadeInput">
+        <input @bind="filmeLocado.quantidade" type="number" class="form-control" id="quantidadeInput">
     </div>
 
     <div class="mb-3">
         <label for="valorInput" class="form-label">Valor:</label>
-        <input @bind="locacao.valor" type="number" step="0.01" class="form-control" id="valorInput">
+        <input @bind="filmeLocado.valor" type="number" step="0.01" class="form-control" id="valorInput">
     </div>
 
     <!-- Botões de Ação -->
@@ -45,6 +45,17 @@
 
 
 @code {
-    locacao locacao { get; set; }
+    LocacaoFilme filmeLocado { get; set; }
+    Filme filme { get; set; }
     bool novo = false;
+
+    void Salvar()
+    {
+
+    }
+
+    void NovoRegistro()
+    {
+        
+    }
 }

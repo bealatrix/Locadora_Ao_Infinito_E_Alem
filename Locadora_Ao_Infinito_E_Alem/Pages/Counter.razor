@@ -1,18 +1,41 @@
 ﻿@page "/counter"
+@using Locadora_Ao_Infinito_E_Alem.Controllers
+@using Locadora_Ao_Infinito_E_Alem.Models
+@inject FilmeController filmeController;
 
 <PageTitle>Counter</PageTitle>
 
 <h1>Counter</h1>
 
 <p role="status">Current count: @currentCount</p>
+<div class="mb-3">
+    <label for="nomeInput" class="form-label">Filme:</label>
+    <input type="text" class="form-control" id="nomeInput">
+</div>
 
 <button class="btn btn-primary" @onclick="IncrementCount">Click me</button>
 
 @code {
+    private Filme filme = new Filme();
+
     private int currentCount = 0;
 
     private void IncrementCount()
     {
         currentCount++;
+        filme.titulo = "ABC";
+        filme.classificacao_indicativa = "18";
+        filme.estoque = "20";
+        filme.preco = 20;
+        cadastrarFilme();
+    }
+
+    public async Task cadastrarFilme()
+    {
+        if (filme != null)
+        {
+            await filmeController.CadastrarFilme(filme);
+            await filmeController.SalvarAlteracoes();
+        }
     }
 }
