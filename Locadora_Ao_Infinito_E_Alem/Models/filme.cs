@@ -27,5 +27,7 @@ namespace Locadora_Ao_Infinito_E_Alem.Models
         
         [Column("estoque")]
         public string estoque { get; set; }
+
+        public List<LocacaoFilme>? LocacoesFilmes { get; set; }
     }
 }

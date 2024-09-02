@@ -27,5 +27,7 @@ namespace Locadora_Ao_Infinito_E_Alem.Models
         
         [Column("cpf")]
         public string cpf { get; set; }
+
+        public List<Locacao>? Locacoes { get; set; }
     }
 }

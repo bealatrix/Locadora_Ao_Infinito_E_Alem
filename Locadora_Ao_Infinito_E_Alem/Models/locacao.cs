@@ -31,6 +31,7 @@ namespace Locadora_Ao_Infinito_E_Alem.Models
         [Column("fk_funcionario")]
         public int FuncionarioFK { get; set; }
 
+        public List<LocacaoFilme>? LocacaoFilmes { get; set; }
 
         [ForeignKey("ClienteFK")]
         public Cliente? Cliente { get; set; }
