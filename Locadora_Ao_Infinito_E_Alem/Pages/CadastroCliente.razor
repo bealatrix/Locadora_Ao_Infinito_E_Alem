@@ -5,73 +5,89 @@
 @inject NavigationManager navegacao;
 
 
-<h3>Cadastro de Cliente</h3>
-
 <div class="container">
     <!-- Barra de navegação temática -->
+
     <nav class="navbar navbar-light" style="background-color: navy;">
         <span class="navbar-brand mb-0 h1 text-white">Locadora ao Infinito e Além</span>
     </nav>
-
     <!-- Formulário de Cadastro de Cliente -->
     <h2 class="mt-4 text-center text-warning">Cadastro de Cliente</h2>
-    <div class="mb-3">
-        <label for="idClienteInput" class="form-label">ID Cliente:</label>
-        <input @bind="cliente.ID" type="text" class="form-control" id="idClienteInput" disabled>
-    </div>
-
-    <div class="mb-3">
-        <label for="nomeInput" class="form-label">Nome:</label>
-        <input @bind="cliente.nome" type="text" class="form-control" id="nomeInput">
-    </div>
-
-    <div class="row">
-        <div class="col-md-6">
-            <div class="mb-3">
-                <label for="dataNascimentoInput" class="form-label">Data de Nascimento:</label>
-                <input @bind="cliente.data_nascimento" type="date" class="form-control" id="dataNascimentoInput">
-            </div>
-        </div>
-        <div class="col-md-6">
-            <div class="mb-3">
-                <label for="telefoneInput" class="form-label">Telefone:</label>
-                <input @bind="cliente.telefone" type="tel" class="form-control" id="telefoneInput">
-            </div>
-        </div>
-    </div>
-
-    <div class="row">
-        <div class="col-md-6">
-            <div class="mb-3">
-                <label for="cpfInput" class="form-label">CPF:</label>
-                <input @bind="cliente.cpf" type="text" class="form-control" id="cpfInput">
-            </div>
-        </div>
-        <div class="col-md-6">
-            <div class="mb-3">
-                <label for="rgInput" class="form-label">RG:</label>
-                <input @bind="cliente.rg" type="text" class="form-control" id="rgInput">
-            </div>
-        </div>
-    </div>
-
-    <!-- Botões de Ação -->
-    <div class="d-flex justify-content-center">
-        <button type="button" class="btn btn-primary mt-3 mx-2" >Salvar</button>
-        <button type="button" class="btn btn-secondary mt-3 mx-2" >Novo Registro</button>
-    </div>
 
     <!-- Mensagem de Sucesso -->
-    <!-- if () -->
-    <!--{
+    @if (sucesso)
+    {
          <div class="alert alert-success mt-3" role="alert">
             Cliente salvo com sucesso!
         </div> 
-    } -->
+    } else 
+    {
+        <div class="mb-3">
+            <label for="nomeInput" class="form-label">Nome:</label>
+            <input @bind="cliente.nome" type="text" class="form-control" id="nomeInput">
+        </div>
+
+        <div class="row">
+            <div class="col-md-6">
+                <div class="mb-3">
+                    <label for="dataNascimentoInput" class="form-label">Data de Nascimento:</label>
+                    <input @bind="cliente.data_nascimento" type="date" class="form-control" id="dataNascimentoInput">
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="mb-3">
+                    <label for="telefoneInput" class="form-label">Telefone:</label>
+                    <input @bind="cliente.telefone" type="tel" class="form-control" id="telefoneInput">
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-md-6">
+                <div class="mb-3">
+                    <label for="cpfInput" class="form-label">CPF:</label>
+                    <input @bind="cliente.cpf" type="text" class="form-control" id="cpfInput">
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="mb-3">
+                    <label for="rgInput" class="form-label">RG:</label>
+                    <input @bind="cliente.rg" type="text" class="form-control" id="rgInput">
+                </div>
+            </div>
+        </div>
+    }
+    <!-- Botões de Ação -->
+    <div class="d-flex justify-content-center">
+        <button type="button" class="btn btn-primary mt-3 mx-2" @onclick="cadastrarCliente">Salvar</button>
+        <button type="button" class="btn btn-secondary mt-3 mx-2" @onclick="novoRegistro">Novo Registro</button>
+    </div>
 </div>
 
 @code {
     private Cliente cliente = new Cliente();
+
+    private bool sucesso = false;
+
+    protected override async Task OnInitializedAsync()
+    {
+        sucesso = false;
+    }
+
+    public async Task cadastrarCliente()
+    {
+        if (cliente != null && cliente.nome != null && cliente.cpf != null && cliente.data_nascimento != null)
+        {
+            await clienteController.CadastrarCliente(cliente);
+            await clienteController.SalvarAlteracoes();
+            sucesso = true;
+        }
+    }
+
+    public async Task novoRegistro()
+    {
+        navegacao.NavigateTo("/cadastroCliente", forceLoad: true);
+    }
 }
 
 

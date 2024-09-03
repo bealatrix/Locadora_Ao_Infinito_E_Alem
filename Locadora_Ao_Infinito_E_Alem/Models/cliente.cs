@@ -17,7 +17,7 @@ namespace Locadora_Ao_Infinito_E_Alem.Models
         public string nome { get; set; }
         
         [Column("data_nascimento")]
-        public DateOnly data_nascimento { get; set; }
+        public DateOnly? data_nascimento { get; set; }
         
         [Column("telefone")]
         public int telefone { get; set; }
