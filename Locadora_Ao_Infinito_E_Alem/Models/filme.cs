@@ -19,10 +19,10 @@ namespace Locadora_Ao_Infinito_E_Alem.Models
         public int duracao { get; set; }
         
         [Column("preco")]
-        public decimal preco { get; set; }
+        public decimal? preco { get; set; }
         
         [Column("estoque")]
-        public string estoque { get; set; }
+        public string? estoque { get; set; }
 
         public List<LocacaoFilme>? LocacoesFilmes { get; set; }
     }

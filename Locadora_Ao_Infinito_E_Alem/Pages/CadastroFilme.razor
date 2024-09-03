@@ -5,71 +5,88 @@
 @inject NavigationManager navegacao;
 
 
-<h3>Cadastro de Filme</h3>
-
 <div class="container">
     <!-- Barra de navegação temática -->
     <nav class="navbar navbar-light" style="background-color: navy;">
         <span class="navbar-brand mb-0 h1 text-white">Locadora ao Infinito e Além</span>
     </nav>
-
     <!-- Formulário de Cadastro de Filme -->
     <h2 class="mt-4 text-center text-warning">Cadastro de Filme</h2>
-    <div class="mb-3">
-        <label for="idFilmeInput" class="form-label">ID Filme:</label>
-        <input @bind="filme.ID" type="text" class="form-control" id="idFilmeInput" disabled>
-    </div>
-
-    <div class="mb-3">
-        <label for="tituloInput" class="form-label">Titulo:</label>
-        <input @bind="filme.titulo" type="text" class="form-control" id="tituloInput">
-    </div>
-
-    <div class="row">
-        <div class="col-md-6">
-            <div class="mb-3">
-                <label for="classificacaoIndicativaInput" class="form-label">Classificacao Indicativa:</label>
-                <input @bind="filme.classificacao_indicativa" type="text" class="form-control" id="classificacaoIndicativaInput">
-            </div>
-        </div>
-        <div class="col-md-6">
-            <div class="mb-3">
-                <label for="duracaoInput" class="form-label">Duração:</label>
-                <input @bind="filme.duracao" type="text" class="form-control" id="duracaoInput">
-            </div>
-        </div>
-    </div>
-
-    <div class="row">
-        <div class="col-md-6">
-            <div class="mb-3">
-                <label for="precoInput" class="form-label">Preço:</label>
-                <input @bind="filme.preco" type="text" class="form-control" id="precoInput">
-            </div>
-        </div>
-        <div class="col-md-6">
-            <div class="mb-3">
-                <label for="estoqueInput" class="form-label">Estoque:</label>
-                <input @bind="filme.estoque" type="text" class="form-control" id="estoqueInput">
-            </div>
-        </div>
-    </div>
-
-    <!-- Botões de Ação -->
-    <div class="d-flex justify-content-center">
-        <button type="button" class="btn btn-primary mt-3 mx-2">Salvar</button>
-        <button type="button" class="btn btn-secondary mt-3 mx-2">Novo Registro</button>
-    </div>
 
     <!-- Mensagem de Sucesso -->
-    <!-- if () -->
-    <!--{
+    @if (sucesso)
+    {
          <div class="alert alert-success mt-3" role="alert">
             Cliente salvo com sucesso!
         </div>
-    } -->
+    }
+    else
+    {
+        <div class="mb-3">
+            <label for="tituloInput" class="form-label">Titulo:</label>
+            <input @bind="filme.titulo" type="text" class="form-control" id="tituloInput">
+        </div>
+
+        <div class="row">
+            <div class="col-md-6">
+                <div class="mb-3">
+                    <label for="classificacaoIndicativaInput" class="form-label">Classificacao Indicativa:</label>
+                    <input @bind="filme.classificacao_indicativa" type="text" class="form-control" id="classificacaoIndicativaInput">
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="mb-3">
+                    <label for="duracaoInput" class="form-label">Duração:</label>
+                    <input @bind="filme.duracao" type="text" class="form-control" id="duracaoInput">
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-md-6">
+                <div class="mb-3">
+                    <label for="precoInput" class="form-label">Preço:</label>
+                    <input @bind="filme.preco" type="text" class="form-control" id="precoInput">
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="mb-3">
+                    <label for="estoqueInput" class="form-label">Estoque:</label>
+                    <input @bind="filme.estoque" type="text" class="form-control" id="estoqueInput">
+                </div>
+            </div>
+        </div>
+    }
+
+    <!-- Botões de Ação -->
+    <div class="d-flex justify-content-center">
+        <button type="button" class="btn btn-primary mt-3 mx-2" @onclick="cadastrarFilme" >Salvar</button>
+        <button type="button" class="btn btn-secondary mt-3 mx-2" @onclick="novoRegistro" >Novo Registro</button>
+    </div>
 </div>
 
 @code {
     private Filme filme = new Filme();
+
+    private bool sucesso = false;
+
+    protected override async Task OnInitializedAsync()
+    {
+        sucesso = false;
+    }
+
+    public async Task cadastrarFilme()
+    {
+        if (filme != null && filme.titulo != null && filme.estoque != null && filme.preco != null && filme.duracao != null)
+    {
+            await filmeController.CadastrarFilme(filme);
+            await filmeController.SalvarAlteracoes();
+            sucesso = true;
+        }
+    }
+
+    public async Task novoRegistro()
+    {
+        navegacao.NavigateTo("/cadastroFilme", forceLoad: true);
+    }
 }
