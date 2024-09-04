@@ -24,11 +24,16 @@ namespace Locadora_Ao_Infinito_E_Alem.Controllers
             var locacoes = await _context.Locacoes.Where(p => p.Cliente == cliente).Include(x => x.Cliente).Include(y => y.Funcionario).FirstOrDefaultAsync();
             return locacoes;
         }
-        public async Task<Locacao?> CadastrarLocacao(List<Locacao> locacoes)
+
+        public async Task<Locacao> BuscarUltimaLocacao()
         {
-            await _context.Locacoes.AddRangeAsync(locacoes);
-            var locacaoAtual = await _context.Locacoes.LastAsync();
-            return locacaoAtual;
+            var locacoes = await _context.Locacoes.Include(x => x.Cliente).Include(y => y.Funcionario).OrderBy(y => y.ID).ToListAsync();
+            Locacao locacao = locacoes.LastOrDefault();
+            return locacao;
+        }
+        public async Task CadastrarLocacao(Locacao locacao)
+        {
+            await _context.Locacoes.AddAsync(locacao);
         }
 
         public async Task SalvarAlteracoes()

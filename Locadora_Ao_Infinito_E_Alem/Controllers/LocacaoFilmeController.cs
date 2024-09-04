@@ -24,9 +24,9 @@ namespace Locadora_Ao_Infinito_E_Alem.Controllers
             var FilmesLocados = await _context.Locacao_Filmes.Where(p => p.Filme == filme).Include(x => x.Filme).Include(y => y.Locacao).FirstOrDefaultAsync();
             return FilmesLocados;
         }
-        public async Task CadastrarLocacaoFilme(LocacaoFilme locacao_filme)
+        public async Task CadastrarLocacaoFilme(List<LocacaoFilme> locacao_filme)
         {
-            await _context.Locacao_Filmes.AddAsync(locacao_filme);
+            await _context.Locacao_Filmes.AddRangeAsync(locacao_filme);
         }
 
         public async Task SalvarAlteracoes()

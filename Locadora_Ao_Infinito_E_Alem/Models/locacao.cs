@@ -14,10 +14,10 @@ namespace Locadora_Ao_Infinito_E_Alem.Models
         public int ID { get; set; }
 
         [Column("data_locacao")]
-        public DateOnly data_locacao { get; set; }
+        public DateTime data_locacao { get; set; }
 
         [Column("data_devolucao")]
-        public DateOnly data_devolucao { get; set; }
+        public DateTime data_devolucao { get; set; }
 
         [Column("valor_total")]
         public decimal valor_total { get; set; }

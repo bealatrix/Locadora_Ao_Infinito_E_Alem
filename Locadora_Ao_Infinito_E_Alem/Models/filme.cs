@@ -19,7 +19,7 @@ namespace Locadora_Ao_Infinito_E_Alem.Models
         public TimeOnly duracao { get; set; }
         
         [Column("preco")]
-        public decimal? preco { get; set; }
+        public decimal preco { get; set; }
         
         [Column("estoque")]
         public int estoque { get; set; }
