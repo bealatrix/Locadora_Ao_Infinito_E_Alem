@@ -16,7 +16,7 @@ namespace Locadora_Ao_Infinito_E_Alem.Models
         [Column("quantidade")]
         public int quantidade { get; set; }
 
-        [Column("valor")]
+        [Column("valor_filme")]
         public decimal valor {  get; set; }
 
         [Column("fk_locacao")]

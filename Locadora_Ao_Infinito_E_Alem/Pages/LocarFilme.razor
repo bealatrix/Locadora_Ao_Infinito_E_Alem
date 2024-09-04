@@ -1,63 +1,193 @@
 ﻿@page "/locarFilme"
 @using Locadora_Ao_Infinito_E_Alem.Controllers
 @using Locadora_Ao_Infinito_E_Alem.Models
+@inject ClienteController clienteController;
+@inject FilmeController filmeController;
+@inject FuncionarioController funcionarioController;
 @inject LocacaoController locacaoController;
 @inject NavigationManager navegacao;
 
-<h3>Locação de Filme</h3>
 
 <div class="container">
     <!-- Formulário de Locação de Filmes -->
     <h2 class="mt-4 text-center text-warning">Cadastro de Locação de Filmes</h2>
 
-    <div class="mb-3">
-        <label for="idLocFilmeInput" class="form-label">ID Locação:</label>
-        <input @bind="filmeLocado.ID" type="text" class="form-control" id="idLocFilmeInput" disabled>
-    </div>
+    <div class="row">
+        <label>Selecione o Cliente:</label>
+        <select @onchange="selecionarCliente">
+            <option> Selecione um Cliente </option>
+            @foreach (var item in listaCliente)
+            {
+                <option value=@item.ID>@item.nome</option>
+            }
+        </select>
 
-    <div class="mb-3">
-        <label for="idFilmeInput" class="form-label">ID do Filme:</label>
-        <input @bind="filme.ID" type="text" class="form-control" id="idFilmeInput">
+        <label>Selecione o Funcionário:</label>
+        <select @onchange="selecionarFuncionario">
+            <option> Selecione um Funcionário </option>
+            @foreach (var item in listaFuncionario)
+            {
+                <option value=@item.ID>@item.nome</option>
+            }
+        </select>
+
+        <label>Selecione um Filme:</label>
+        <select @onchange="selecionarFilme">
+            <option> Selecione um Filme </option>
+            @foreach (var item in listaFilme)
+            {
+                <option value=@item.ID>@item.titulo</option>
+            }
+        </select>
     </div>
 
     <div class="mb-3">
         <label for="quantidadeInput" class="form-label">Quantidade:</label>
-        <input @bind="filmeLocado.quantidade" type="number" class="form-control" id="quantidadeInput">
+        <input @bind="locacaoFilme.quantidade" type="number" class="form-control" id="quantidadeInput">
     </div>
 
-    <div class="mb-3">
-        <label for="valorInput" class="form-label">Valor:</label>
-        <input @bind="filmeLocado.valor" type="number" step="0.01" class="form-control" id="valorInput">
+    <div class="col-md-6">
+        <div class="mb-3">
+            <label for="dataInicioLocacaoInput" class="form-label">Data Inicial da Locação:</label>
+            <input @bind="locacao.data_locacao" type="date" class="form-control" id="dataInicioLocacaoInput">
+        </div>
+    </div>
+    <div class="col-md-6">
+        <div class="mb-3">
+            <label for="dataFimLocacaoInput" class="form-label">Data Final da Locação:</label>
+            <input @bind="locacao.data_devolucao" type="date" class="form-control" id="dataFimLocacaoInput">
+        </div>
+    </div>
+
+    <div class="col-md-6">
+        <div class="mb-3">
+            <label for="dataFimLocacaoInput" class="form-label">Quantidade a locar:</label>
+            <input @bind="quantidade" type="date" class="form-control" id="dataFimLocacaoInput">
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="mb-3">
+            <label for="valorInput" class="form-label">Valor Diário:</label>
+            <input @bind-value=@filme.preco type="number" step="0.01" class="form-control" id="valorInput" readonly>
+        </div>
+
+        <div class="mb-3">
+            <label for="valorInput" class="form-label">Valor Total:</label>
+            <input @bind-value="@locacaoFilme.valor" type="number" step="0.01" class="form-control" id="valorInput" readonly>
+        </div>
     </div>
 
     <!-- Botões de Ação -->
     <div class="d-flex justify-content-center">
-        <button type="button" class="btn btn-primary mt-3 mx-2" @onclick="Salvar">Salvar</button>
-        <button type="button" class="btn btn-secondary mt-3 mx-2" @onclick="NovoRegistro">Novo Registro</button>
+        <button type="button" class="btn btn-primary mt-3 mx-2" @onclick="locarFilme">Adicionar</button>
+        <button type="button" class="btn btn-secondary mt-3 mx-2" @onclick="novoRegistro">Novo Registro</button>
     </div>
 
     <!-- Mensagem de Sucesso -->
-    @if (novo)
+    @if (sucesso)
     {
         <div class="alert alert-success mt-3" role="alert">
             Locação salva com sucesso!
         </div>
     }
+
+    @if (locacaoFilmesLista != null)
+    {
+        <!-- Tabela de Locações -->
+        <table class="table table-striped">
+            <thead>
+                <tr>
+                    <th>Filme</th>
+                    <th>Quantidade</th>
+                    <th>Valor</th>
+
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var item in locacaoFilmesLista)
+                {
+                    <tr>
+                        <td>@item.Filme.titulo</td>
+                        <td>@item.quantidade</td>
+                        <td>@item.valor</td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    }
 </div>
 
 
 @code {
-    private LocacaoFilme filmeLocado = new LocacaoFilme();
+    private List<Cliente>? listaCliente = new List<Cliente>();
+    private List<Filme>? listaFilme = new List<Filme>();
+    private List<Funcionario>? listaFuncionario = new List<Funcionario>();
+    private List<Locacao>? locacoesLista = new List<Locacao>();
+    private List<LocacaoFilme>? locacaoFilmesLista = new List<LocacaoFilme>();
+
+    private LocacaoFilme locacaoFilme = new LocacaoFilme();
+    private Cliente cliente = new Cliente();
+    private Funcionario funcionario = new Funcionario();
     private Filme filme = new Filme();
-    bool novo = false;
+    private Locacao locacao = new Locacao();
 
-    void Salvar()
+    private int quantidade = 0;
+    private bool sucesso = false;
+
+    protected override async Task OnInitializedAsync()
     {
+        listaCliente = await clienteController.ListarClientes();
+        listaFilme = await filmeController.ListarFilmes();
+        listaFuncionario = await funcionarioController.ListarFuncionarios();
+        locacoesLista = await locacaoController.ListarLocacoes();
 
+        sucesso = false;
     }
 
-    void NovoRegistro()
+    public async Task adicionarFilme()
     {
-        
+        if (quantidade <= filme.estoque)
+        {
+            locacaoFilme.quantidade = quantidade;
+            locacaoFilme.Filme = filme;
+            locacaoFilme.Locacao = locacao;
+        }
+    }
+
+    public async Task locarFilme()
+    {
+        if (filme != null && filme.titulo != null && filme.estoque != null && filme.preco != null && filme.duracao != null)
+        {
+            locacao.Cliente = cliente;
+            locacao.Funcionario = funcionario;
+
+            await locacaoController.CadastrarLocacao(locacoesLista);
+            await locacaoController.SalvarAlteracoes();
+            sucesso = true;
+        }
+    }
+
+    public void selecionarCliente(ChangeEventArgs e)
+    {
+        int id = Convert.ToInt32(e.Value.ToString());
+        cliente = listaCliente.Where(cli => cli.ID == id).FirstOrDefault();
+    }
+
+    public void selecionarFuncionario(ChangeEventArgs e)
+    {
+        int id = Convert.ToInt32(e.Value.ToString());
+        funcionario = listaFuncionario.Where(func => func.ID == id).FirstOrDefault();
+    }
+
+    public void selecionarFilme(ChangeEventArgs e)
+    {
+        int id = Convert.ToInt32(e.Value.ToString());
+        filme = listaFilme.Where(fil => fil.ID == id).FirstOrDefault();
+    }
+
+    public async Task novoRegistro()
+    {
+        navegacao.NavigateTo("/locarFilme", forceLoad: true);
     }
 }

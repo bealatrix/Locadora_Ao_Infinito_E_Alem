@@ -16,13 +16,13 @@ namespace Locadora_Ao_Infinito_E_Alem.Models
         public string classificacao_indicativa { get; set; }
         
         [Column("duracao")]
-        public int duracao { get; set; }
+        public TimeOnly duracao { get; set; }
         
         [Column("preco")]
         public decimal? preco { get; set; }
         
         [Column("estoque")]
-        public string? estoque { get; set; }
+        public int estoque { get; set; }
 
         public List<LocacaoFilme>? LocacoesFilmes { get; set; }
     }

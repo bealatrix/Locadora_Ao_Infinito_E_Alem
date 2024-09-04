@@ -20,10 +20,10 @@ namespace Locadora_Ao_Infinito_E_Alem.Models
         public DateOnly? data_nascimento { get; set; }
         
         [Column("telefone")]
-        public int telefone { get; set; }
+        public string telefone { get; set; }
         
         [Column("rg")]
-        public int rg { get; set; }
+        public string rg { get; set; }
         
         [Column("cpf")]
         public string cpf { get; set; }

@@ -24,9 +24,11 @@ namespace Locadora_Ao_Infinito_E_Alem.Controllers
             var locacoes = await _context.Locacoes.Where(p => p.Cliente == cliente).Include(x => x.Cliente).Include(y => y.Funcionario).FirstOrDefaultAsync();
             return locacoes;
         }
-        public async Task CadastrarLocacao(Locacao locacao)
+        public async Task<Locacao?> CadastrarLocacao(List<Locacao> locacoes)
         {
-            await _context.Locacoes.AddAsync(locacao);
+            await _context.Locacoes.AddRangeAsync(locacoes);
+            var locacaoAtual = await _context.Locacoes.LastAsync();
+            return locacaoAtual;
         }
 
         public async Task SalvarAlteracoes()
