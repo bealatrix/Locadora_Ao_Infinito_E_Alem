@@ -23,7 +23,7 @@ namespace Locadora_Ao_Infinito_E_Alem.Models
         public decimal valor_total { get; set; }
 
         [Column("status")]
-        public char Status { get; set; }
+        public string Status { get; set; }
 
         [Column("fk_cliente")]
         public int ClienteFK { get; set; }

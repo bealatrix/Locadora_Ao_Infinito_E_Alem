@@ -19,6 +19,12 @@ namespace Locadora_Ao_Infinito_E_Alem.Controllers
             return locacoes;
         }
 
+        public async Task<List<Locacao>>? ListarLocacoesComFilmes()
+        {
+            var locacoes = await _context.Locacoes.Include(x => x.Cliente).Include(x => x.LocacaoFilmes).ThenInclude(lf => lf.Filme).ToListAsync();
+            return locacoes;
+        }
+
         public async Task<Locacao?> BuscarLocacao(Cliente cliente)
         {
             var locacoes = await _context.Locacoes.Where(p => p.Cliente == cliente).Include(x => x.Cliente).Include(y => y.Funcionario).FirstOrDefaultAsync();

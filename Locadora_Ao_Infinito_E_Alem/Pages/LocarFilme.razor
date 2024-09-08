@@ -29,110 +29,84 @@
         } else
         {
             <div class="row">
-                <div class="col-md-6">
-                    @if (cliente.nome == null)
-                    {
-                        <div class="mb-2">
-                            <label>Selecione o Cliente:</label>
-                            <select @onchange="selecionarCliente">
-                                <option> Selecione um Cliente </option>
+
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="mb-3">
+                            <label for="selectCliente" class="form-label">Selecione o Cliente:</label>
+                            <select class="form-control" id="selectCliente" @onchange="selecionarCliente">
+                                <option value=null disabled selected> Selecione um Cliente </option>
                                 @foreach (var item in listaCliente)
                                 {
                                     <option value=@item.ID>@item.nome</option>
                                 }
                             </select>
                         </div>
-                    }
-                    else
-                    {
-                        <div class="mb-2">
-                            <label>Selecione o Cliente:</label>
-                            <select @onchange="selecionarCliente">
-                                <option> @cliente.nome </option>
-                            </select>
-                        </div>
-                    }
-                </div>
-
-                <div class="col-md-6">
-                    <div class="mb-2">
-                        <label>Selecione o Funcionário:</label>
-                        @if (funcionario.nome == null)
-                        {
-                            <select @onchange="selecionarFuncionario">
-                                <option value=null> Selecione um Funcionário </option>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="mb-3">
+                            <label for="selectFuncionario" class="form-label">Selecione o Funcionário:</label>
+                            <select class="form-control" @onchange="selecionarFuncionario" id="selectFuncionario">
+                                <option value=null disabled selected> Selecione um Funcionário </option>
                                 @foreach (var item in listaFuncionario)
                                 {
                                     <option value=@item.ID>@item.nome</option>
                                 }
                             </select>
-                        }
-                        else
-                        {
-                            <select @onchange="selecionarFuncionario">
-                                <option> @funcionario.nome </option>
-                            </select>
-                        }
-                    </div>
-                </div>
-
-                <div class="col-md-6">
-                    <div class="mb-2">
-                        <label>Selecione um Filme:</label>
-                        @if (filme.titulo == null)
-                        {
-                            <select @onchange="selecionarFilme">
-                                <option> Selecione um Filme </option>
-                                @foreach (var item in listaFilme)
-                                {
-                                    <option value=@item.ID>@item.titulo</option>
-                                }
-                            </select>
-                        }
-                        else
-                        {
-                            <select @onchange="selecionarFilme">
-                                <option> @filme.titulo </option>
-                            </select>
-                        }
+                        </div>
                     </div>
                 </div>
             </div>
 
-            @if (filme.titulo != null)
-            {
-                <div class="mb-3">
-                    <label for="quantidadeInput" class="form-label">Quantidade:</label>
-                    <input @onchange="modificarValorFinal" type="number" class="form-control" id="quantidadeInput">
-                </div>
-            }
-            else
-            {
-                <div class="mb-3">
-                    <label for="quantidadeInput" class="form-label">Quantidade:</label>
-                    <input @bind-value=@quantidade type="number" class="form-control" id="quantidadeInput">
-                </div>
-            }
-
             <div class="row">
                 <div class="col-md-6">
                     <div class="mb-3">
-                        <label for="dataInicioLocacaoInput" class="form-label">Data Inicial da Locação:</label>
-                        <input @bind="locacao.data_locacao" type="date" class="form-control" id="dataInicioLocacaoInput">
+                        <label for="dataInicioLocacaoInput" class="form-label">Data de Locação (Hoje)</label>
+                        <input disabled @bind="locacao.data_locacao" type="date" class="form-control" id="dataInicioLocacaoInput">
                     </div>
                 </div>
                 <div class="col-md-6">
                     <div class="mb-3">
-                        <label for="dataFimLocacaoInput" class="form-label">Data Final da Locação:</label>
+                        <label for="dataFimLocacaoInput" class="form-label">Data de Devolução:</label>
                         <input @onchange="calcularValorFinal" type="date" class="form-control" id="dataFimLocacaoInput">
                     </div>
                 </div>
             </div>
 
+            <hr/>
+
+            <div class="mb-3">
+                <label for="selectFilme" class="form-label">Selecione um filme:</label>
+                <select class="form-control" id="selectFilme" @onchange="selecionarFilme">
+                    <option value=null disabled selected> Selecione um Filme </option>
+                    @foreach (var item in listaFilme)
+                    {
+                        <option value=@item.ID>@item.titulo</option>
+                    }
+                </select>
+            </div>
+
             <div class="row">
                 <div class="col-md-6">
                     <div class="mb-3">
-                        <label for="valorInput" class="form-label">Valor Diário:</label>
+                        <label for="inputEstoque" class="form-label">Estoque do filme:</label>
+                        <input @bind-value=@filme.estoque disabled type="number" class="form-control" id="inputEstoque">
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="mb-3">
+                        <label for="quantidadeInput" class="form-label">Quantidade:</label>
+                        <input @onchange="modificarValorFinal" type="number" class="form-control" id="quantidadeInput" placeholder="Informe a quantidade desse filme para locar">
+                    </div>
+                </div>
+            </div>
+
+            
+
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="mb-3">
+                        <label for="valorInput" class="form-label">Valor do Filme:</label>
                         <input @bind-value=@filme.preco type="number" step="0.01" class="form-control" id="valorInput" readonly>
                     </div>
                 </div>
@@ -140,7 +114,7 @@
                 <div class="col-md-6">
                     <div class="mb-3">
                         <label for="valorInput" class="form-label">Valor Total:</label>
-                        <input @bind-value=@locacaoFilme.valor type="number" step="0.01" class="form-control" id="valorInput" readonly>
+                        <input @bind-value=@valorTotalDias type="number" step="0.01" class="form-control" id="valorInput" readonly>
                     </div>
                 </div>
             </div>
@@ -149,8 +123,8 @@
 
     <!-- Botões de Ação -->
     <div class="d-flex justify-content-center">
-        <button type="button" class="btn btn-primary mt-3 mx-2" @onclick="adicionarFilme">Adicionar</button>
-        <button type="button" class="btn btn-outline-primary mt-3 mx-2" @onclick="locarFilmes">Salvar</button>
+        <button type="button" class="btn btn-primary mt-3 mx-2" @onclick="adicionarFilme">Adicionar filme à locação</button>
+        <button type="button" class="btn btn-outline-primary mt-3 mx-2" @onclick="locarFilmes">Registrar locação</button>
         <button type="button" class="btn btn-secondary mt-3 mx-2" @onclick="novoRegistro">Novo Registro</button>
     </div>
 
@@ -163,7 +137,6 @@
                     <th>Filme</th>
                     <th>Quantidade</th>
                     <th>Valor</th>
-
                 </tr>
             </thead>
             <tbody>
@@ -176,6 +149,14 @@
                     </tr>
                 }
             </tbody>
+            <tfoot>
+                <tr>
+                    <th scope="row">Valor total da locação</th>
+                    <td> </td>
+                    <td>@valorTotalLocacao</td>
+                </tr>
+            </tfoot>
+
         </table>
     }
 </div>
@@ -194,10 +175,12 @@
     private Locacao locacao = new Locacao();
 
     private int quantidade = 0;
+    private decimal valorTotalDias=0;
     private string texto;
     private bool sucesso = false;
     private bool erro = false;
     private bool liberado = false;
+    private decimal valorTotalLocacao;
 
 
     protected override async Task OnInitializedAsync()
@@ -209,17 +192,16 @@
 
         sucesso = false;
         erro = false;
-        liberado = false;
+        liberado = true;
         texto = "Ocorreu um erro ao salvar os dados. Verifique se todos os campos foram preenchidos.";
     }
 
     public void modificarValorFinal(ChangeEventArgs e)
     {
-        quantidade = Convert.ToInt32(e.Value.ToString());
-        if (filme != null && locacao.data_locacao != null && DateTime.Compare(locacao.data_locacao, DateTime.Today.Date) >= 0 && DateTime.Compare(locacao.data_devolucao, DateTime.Today.Date) > 0)
+        if (e.Value != null)
         {
-            locacaoFilme.valor = quantidade * filme.preco;
-            liberado = true;
+            quantidade = Convert.ToInt32(e.Value.ToString());
+            valorTotalDias = quantidade * filme.preco;
         }
     }
 
@@ -242,43 +224,25 @@
 
     public void adicionarFilme()
     {
-        if (quantidade <= filme.estoque && liberado)
+        if (quantidade <= filme.estoque)
         {
             if (locacaoFilmesLista.FindIndex(x => x.Filme.titulo == filme.titulo) < 0)
             {
-                if (locacao.valor_total == 0)
-                {
-                    locacao.valor_total = locacaoFilme.valor;
-                }
-                else
-                {
-                    locacao.valor_total += locacaoFilme.valor;
-                }
-
                 erro = false;
-                Filme filmeSecundario = new Filme();
-                LocacaoFilme locacaoFilmeSecundaria = new LocacaoFilme();
-                locacaoFilmeSecundaria = locacaoFilme;
-                filmeSecundario = filme;
-                locacaoFilmeSecundaria.quantidade = quantidade;
-                locacaoFilmeSecundaria.Filme = filmeSecundario;
-                locacaoFilmesLista.Add(locacaoFilmeSecundaria);
+                locacaoFilme.quantidade = quantidade;
+                locacaoFilme.valor = quantidade * filme.preco;
+                valorTotalLocacao = valorTotalLocacao + locacaoFilme.valor;
+                locacaoFilme.Filme = filme;
+                locacaoFilmesLista.Add(locacaoFilme);
+
+                //Após adicionar o filme para a lista de preparação para a locação, remove esse filme da lista de filmes para selecionar
+                listaFilme.Remove(filme);
 
                 quantidade = 0;
+                valorTotalDias = 0;
                 filme = new Filme();
                 locacaoFilme = new LocacaoFilme();
-                locacao.data_devolucao = locacao.data_devolucao;
-                liberado = false;
-            } else
-            {
-                quantidade = 0;
-                filme = new Filme();
-                locacaoFilme = new LocacaoFilme();
-                locacao.data_devolucao = locacao.data_devolucao;
-                liberado = false;
-                texto = "O filme atual já foi adicionado à lista. Selecione um filme que não esteja na lista ou refaça a lista.";
-                erro = true;
-            }
+            } 
         } else
         {
             texto = "O estoque atual disponível para este filme é de " + filme.estoque + " unidades. Insira um valor igual ou inferior a este.";
@@ -288,16 +252,19 @@
 
     public async Task locarFilmes()
     {
-        if (locacao.valor_total != null && locacao.valor_total > 0 && cliente != null && funcionario != null && locacaoFilmesLista != null)
+        if (locacaoFilmesLista != null)
         {
+            locacao.valor_total = valorTotalLocacao;
             locacao.Cliente = cliente;
             locacao.Funcionario = funcionario;
-            locacao.Status = Convert.ToChar("A");
+            locacao.Status = "Ativa";
 
             await locacaoController.CadastrarLocacao(locacao);
             await locacaoController.SalvarAlteracoes();
 
-            Locacao ultima_locacao = await locacaoController.BuscarUltimaLocacao();
+            //Locacao ultima_locacao = await locacaoController.BuscarUltimaLocacao();
+
+            //Adiciona o id de locação para as locações_filmes
             foreach (var item in locacaoFilmesLista)
             {
                 item.Locacao = locacao;
@@ -329,8 +296,12 @@
 
     public void selecionarFilme(ChangeEventArgs e)
     {
-        int id = Convert.ToInt32(e.Value.ToString());
-        filme = listaFilme.Where(fil => fil.ID == id).FirstOrDefault();
+        if (e.Value != null)
+        {
+            int id = Convert.ToInt32(e.Value.ToString());
+            filme = listaFilme.Where(fil => fil.ID == id).FirstOrDefault();
+        }
+        
     }
 
     public async Task novoRegistro()
