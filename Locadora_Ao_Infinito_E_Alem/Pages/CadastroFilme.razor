@@ -1,4 +1,5 @@
-﻿@page "/cadastroFilme"
+﻿@page "/"
+@page "/cadastroFilme"
 @using Locadora_Ao_Infinito_E_Alem.Controllers
 @using Locadora_Ao_Infinito_E_Alem.Models
 @inject FilmeController filmeController;
@@ -6,12 +7,9 @@
 
 
 <div class="container">
-    <!-- Barra de navegação temática -->
-    <nav class="navbar navbar-light" style="background-color: navy;">
-        <span class="navbar-brand mb-0 h1 text-white">Locadora ao Infinito e Além</span>
-    </nav>
     <!-- Formulário de Cadastro de Filme -->
-    <h2 class="mt-4 text-center text-warning">Cadastro de Filme</h2>
+    <h2 class="mt-4 text-start text-warning">Cadastro de Filme</h2>
+    <br />
 
     <!-- Mensagem de Sucesso -->
     @if (sucesso)
@@ -19,6 +17,10 @@
          <div class="alert alert-success mt-3" role="alert">
             Cliente salvo com sucesso!
         </div>
+        <div class="d-flex justify-content-center">
+            <button type="button" class="btn btn-secondary mt-3 mx-2" @onclick="novoRegistro">Novo Registro</button>
+        </div>
+        
     }
     else
     {
@@ -31,12 +33,20 @@
             <div class="col-md-6">
                 <div class="mb-3">
                     <label for="classificacaoIndicativaInput" class="form-label">Classificacao Indicativa:</label>
-                    <input @bind="filme.classificacao_indicativa" type="text" class="form-control" id="classificacaoIndicativaInput">
+                    <select @bind="classIndicativa" class="form-control" id="selectClassificacao">
+                        <option selected disabled>Selecione a classificação indicativa do filme</option>
+                        <option value="Livre para todos os públicos">Livre para todos os públicos</option>
+                        <option value="Não recomendado para menores de 10 anos">Não recomendado para menores de 10 anos</option>
+                        <option value="Não recomendado para menores de 12 anos">Não recomendado para menores de 12 anos</option>
+                        <option value="Não recomendado para menores de 14 anos">Não recomendado para menores de 14 anos</option>
+                        <option value="Não recomendado para menores de 16 anos">Não recomendado para menores de 16 anos</option>
+                        <option value="Não recomendado para menores de 18 anos">Não recomendado para menores de 18 anos</option>
+                    </select>
                 </div>
             </div>
             <div class="col-md-6">
                 <div class="mb-3">
-                    <label for="duracaoInput" class="form-label">Duração:</label>
+                    <label for="duracaoInput" class="form-label">Duração (Em horas):</label>
                     <input @bind="filme.duracao" type="text" class="form-control" id="duracaoInput">
                 </div>
             </div>
@@ -56,19 +66,22 @@
                 </div>
             </div>
         </div>
+
+        <!-- Botões de Ação -->
+        <div class="d-flex justify-content-center">
+            <button type="button" class="btn btn-primary mt-3 mx-2" @onclick="cadastrarFilme">Salvar</button>
+        </div>
     }
 
-    <!-- Botões de Ação -->
-    <div class="d-flex justify-content-center">
-        <button type="button" class="btn btn-primary mt-3 mx-2" @onclick="cadastrarFilme" >Salvar</button>
-        <button type="button" class="btn btn-secondary mt-3 mx-2" @onclick="novoRegistro" >Novo Registro</button>
-    </div>
+    
 </div>
 
 @code {
     private Filme filme = new Filme();
 
     private bool sucesso = false;
+
+    private string classIndicativa;
 
     protected override async Task OnInitializedAsync()
     {
@@ -77,8 +90,9 @@
 
     public async Task cadastrarFilme()
     {
-        if (filme != null && filme.titulo != null && filme.estoque != null && filme.preco != null && filme.duracao != null)
-    {
+        if (filme.titulo != null && filme.estoque != null && filme.preco != null && filme.duracao != null)
+        {
+            filme.classificacao_indicativa = classIndicativa;
             await filmeController.CadastrarFilme(filme);
             await filmeController.SalvarAlteracoes();
             sucesso = true;

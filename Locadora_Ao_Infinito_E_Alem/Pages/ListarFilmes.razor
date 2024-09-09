@@ -1,0 +1,44 @@
+﻿@page "/listaFilmes"
+@using Locadora_Ao_Infinito_E_Alem.Models
+@using Locadora_Ao_Infinito_E_Alem.Controllers
+@inject NavigationManager navegacao;
+@inject FilmeController filmeController;
+
+<div class="container">
+    <h2 class="mt-4 text-start text-warning">Filmes cadastrados</h2>
+    <br />
+
+    <!-- Tabela de Locações -->
+    <table class="table table-striped">
+        <thead>
+            <tr>
+                <th>ID Filme</th>
+                <th>Título</th>
+                <th>Preço</th>
+                <th>Quantidade em estoque</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var filme in listaFilmes)
+            {
+                <tr>
+                    <td>@filme.ID</td>
+                    <td>@filme.titulo </td>
+                    <td>@filme.preco </td>
+                    <td>@filme.estoque</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>
+
+@code {
+
+    private List<Filme>? listaFilmes = new List<Filme>();
+
+    protected override async Task OnInitializedAsync()
+    {
+        listaFilmes = await filmeController.ListarFilmes();
+    }
+}
+

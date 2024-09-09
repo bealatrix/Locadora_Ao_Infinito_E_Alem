@@ -11,7 +11,8 @@
 
 <div class="container">
     <!-- Formulário de Locação de Filmes -->
-    <h2 class="mt-4 text-center text-warning">Cadastro de Locação de Filmes</h2>
+    <h2 class="mt-4 text-start text-warning">Locar Filmes</h2>
+    <br />
 
     @if (erro)
     {
@@ -26,6 +27,9 @@
             <div class="alert alert-success mt-3" role="alert">
                 Locação salva com sucesso!
             </div>
+            <div class="d-flex justify-content-center">
+                <button type="button" class="btn btn-secondary mt-3 mx-2" @onclick="novoRegistro">Novo Registro</button>
+            </div>
         } else
         {
             <div class="row">
@@ -34,7 +38,7 @@
                     <div class="col-md-6">
                         <div class="mb-3">
                             <label for="selectCliente" class="form-label">Selecione o Cliente:</label>
-                            <select class="form-control" id="selectCliente" @onchange="selecionarCliente">
+                            <select disabled="@selectsBlock"  class="form-control" id="selectCliente" @onchange="selecionarCliente">
                                 <option value=null disabled selected> Selecione um Cliente </option>
                                 @foreach (var item in listaCliente)
                                 {
@@ -46,7 +50,7 @@
                     <div class="col-md-6">
                         <div class="mb-3">
                             <label for="selectFuncionario" class="form-label">Selecione o Funcionário:</label>
-                            <select class="form-control" @onchange="selecionarFuncionario" id="selectFuncionario">
+                            <select disabled="@selectsBlock" class="form-control" @onchange="selecionarFuncionario" id="selectFuncionario">
                                 <option value=null disabled selected> Selecione um Funcionário </option>
                                 @foreach (var item in listaFuncionario)
                                 {
@@ -68,17 +72,18 @@
                 <div class="col-md-6">
                     <div class="mb-3">
                         <label for="dataFimLocacaoInput" class="form-label">Data de Devolução:</label>
-                        <input @onchange="calcularValorFinal" type="date" class="form-control" id="dataFimLocacaoInput">
+                        <input @onchange="calcularValorFinal" disabled="@selectsBlock" type="date" class="form-control" id="dataFimLocacaoInput">
                     </div>
                 </div>
             </div>
-
+            
             <hr/>
+            <br />
 
             <div class="mb-3">
                 <label for="selectFilme" class="form-label">Selecione um filme:</label>
                 <select class="form-control" id="selectFilme" @onchange="selecionarFilme">
-                    <option value=null disabled selected> Selecione um Filme </option>
+                    <option value="nulo" selected> Selecione um Filme </option>
                     @foreach (var item in listaFilme)
                     {
                         <option value=@item.ID>@item.titulo</option>
@@ -95,69 +100,54 @@
                 </div>
                 <div class="col-md-6">
                     <div class="mb-3">
-                        <label for="quantidadeInput" class="form-label">Quantidade:</label>
-                        <input @onchange="modificarValorFinal" type="number" class="form-control" id="quantidadeInput" placeholder="Informe a quantidade desse filme para locar">
-                    </div>
-                </div>
-            </div>
-
-            
-
-            <div class="row">
-                <div class="col-md-6">
-                    <div class="mb-3">
                         <label for="valorInput" class="form-label">Valor do Filme:</label>
                         <input @bind-value=@filme.preco type="number" step="0.01" class="form-control" id="valorInput" readonly>
                     </div>
                 </div>
+            </div>
 
-                <div class="col-md-6">
-                    <div class="mb-3">
-                        <label for="valorInput" class="form-label">Valor Total:</label>
-                        <input @bind-value=@valorTotalDias type="number" step="0.01" class="form-control" id="valorInput" readonly>
-                    </div>
-                </div>
+
+
+            <div class="mb-3">
+                <label for="valorInput" class="form-label">Valor Total:</label>
+                <input @bind-value=@filme.preco type="number" step="0.01" class="form-control" id="valorInput" readonly>
+            </div>
+
+            
+            <!-- Tabela de Locações -->
+            <table class="table table-striped">
+                <thead>
+                    <tr>
+                        <th>Filme</th>
+                        <th>Valor</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var item in locacaoFilmesLista)
+                    {
+                        <tr>
+                            <td>@item.Filme.titulo</td>
+                            <td>@item.valor</td>
+                        </tr>
+                    }
+                </tbody>
+            @if (locacaoFilmesLista.Count > 0)
+            {
+                <tfoot>
+                    <tr>
+                        <th scope="row">Valor total da locação</th>
+                        <td>@valorTotalLocacao</td>
+                    </tr>
+                </tfoot>
+            }
+            </table>
+
+            <!-- Botões de Ação -->
+            <div class="d-flex justify-content-center">
+                <button type="button" class="btn btn-primary mt-3 mx-2" @onclick="adicionarFilme">Adicionar filme à locação</button>
+                <button type="button" class="btn btn-outline-primary mt-3 mx-2" @onclick="locarFilmes">Registrar locação</button>
             </div>
         }
-    }
-
-    <!-- Botões de Ação -->
-    <div class="d-flex justify-content-center">
-        <button type="button" class="btn btn-primary mt-3 mx-2" @onclick="adicionarFilme">Adicionar filme à locação</button>
-        <button type="button" class="btn btn-outline-primary mt-3 mx-2" @onclick="locarFilmes">Registrar locação</button>
-        <button type="button" class="btn btn-secondary mt-3 mx-2" @onclick="novoRegistro">Novo Registro</button>
-    </div>
-
-    @if (locacaoFilmesLista != null)
-    {
-        <!-- Tabela de Locações -->
-        <table class="table table-striped">
-            <thead>
-                <tr>
-                    <th>Filme</th>
-                    <th>Quantidade</th>
-                    <th>Valor</th>
-                </tr>
-            </thead>
-            <tbody>
-                @foreach (var item in locacaoFilmesLista)
-                {
-                    <tr>
-                        <td>@item.Filme.titulo</td>
-                        <td>@item.quantidade</td>
-                        <td>@item.valor</td>
-                    </tr>
-                }
-            </tbody>
-            <tfoot>
-                <tr>
-                    <th scope="row">Valor total da locação</th>
-                    <td> </td>
-                    <td>@valorTotalLocacao</td>
-                </tr>
-            </tfoot>
-
-        </table>
     }
 </div>
 
@@ -179,8 +169,9 @@
     private string texto;
     private bool sucesso = false;
     private bool erro = false;
-    private bool liberado = false;
+    private bool selectsBlock = false;
     private decimal valorTotalLocacao;
+    private string dataDevolucao;
 
 
     protected override async Task OnInitializedAsync()
@@ -192,7 +183,6 @@
 
         sucesso = false;
         erro = false;
-        liberado = true;
         texto = "Ocorreu um erro ao salvar os dados. Verifique se todos os campos foram preenchidos.";
     }
 
@@ -207,33 +197,32 @@
 
     public void calcularValorFinal(ChangeEventArgs e)
     {
-        locacao.data_devolucao = DateTime.Parse(e.Value.ToString());
-        if (locacao.data_locacao != null && DateTime.Compare(locacao.data_locacao, DateTime.Today.Date) >= 0 && DateTime.Compare(locacao.data_devolucao, DateTime.Today.Date) > 0)
-        {
-            locacaoFilme.valor = quantidade * filme.preco;
 
+        dataDevolucao = e.Value.ToString();
+        var DevolucaoDate = DateTime.Parse(dataDevolucao);
+        if (DateTime.Compare(DevolucaoDate, DateTime.Today.Date) > 0)
+        {
             erro = false;
-            liberado = true;
         } else
         {
             texto = "A data de locação não pode ser menor do que a data atual e ambas as datas devem estar preenchidas.";
             erro = true;
-            liberado = false;
         }
     }
 
     public void adicionarFilme()
     {
-        if (quantidade <= filme.estoque)
+        if (filme != null && quantidade <= filme.estoque && dataDevolucao != null)
         {
             if (locacaoFilmesLista.FindIndex(x => x.Filme.titulo == filme.titulo) < 0)
             {
                 erro = false;
-                locacaoFilme.quantidade = quantidade;
-                locacaoFilme.valor = quantidade * filme.preco;
+                locacaoFilme.valor = filme.preco;
                 valorTotalLocacao = valorTotalLocacao + locacaoFilme.valor;
                 locacaoFilme.Filme = filme;
                 locacaoFilmesLista.Add(locacaoFilme);
+                filme.estoque = filme.estoque - 1;
+                selectsBlock = true;
 
                 //Após adicionar o filme para a lista de preparação para a locação, remove esse filme da lista de filmes para selecionar
                 listaFilme.Remove(filme);
@@ -257,6 +246,7 @@
             locacao.valor_total = valorTotalLocacao;
             locacao.Cliente = cliente;
             locacao.Funcionario = funcionario;
+            locacao.data_devolucao = DateTime.Parse(dataDevolucao);
             locacao.Status = "Ativa";
 
             await locacaoController.CadastrarLocacao(locacao);
@@ -269,9 +259,11 @@
             {
                 item.Locacao = locacao;
             }
-
             await locacaoFilmeController.CadastrarLocacaoFilme(locacaoFilmesLista);
             await locacaoFilmeController.SalvarAlteracoes();
+            await filmeController.SalvarAlteracoes();
+
+
 
             sucesso = true;
         }
@@ -284,24 +276,33 @@
 
     public void selecionarCliente(ChangeEventArgs e)
     {
-        int id = Convert.ToInt32(e.Value.ToString());
-        cliente = listaCliente.Where(cli => cli.ID == id).FirstOrDefault();
+        if (e.Value != null)
+        {
+            int id = Convert.ToInt32(e.Value.ToString());
+            cliente = listaCliente.Where(cli => cli.ID == id).FirstOrDefault();
+        }
     }
 
     public void selecionarFuncionario(ChangeEventArgs e)
     {
-        int id = Convert.ToInt32(e.Value.ToString());
-        funcionario = listaFuncionario.Where(func => func.ID == id).FirstOrDefault();
+        if (e.Value != null)
+        {
+            int id = Convert.ToInt32(e.Value.ToString());
+            funcionario = listaFuncionario.Where(func => func.ID == id).FirstOrDefault();
+        }
     }
 
     public void selecionarFilme(ChangeEventArgs e)
     {
-        if (e.Value != null)
+        if (e.Value != null && e.Value.ToString() != "nulo")
         {
             int id = Convert.ToInt32(e.Value.ToString());
             filme = listaFilme.Where(fil => fil.ID == id).FirstOrDefault();
         }
-        
+        else
+        {
+            filme = new Filme();
+        }
     }
 
     public async Task novoRegistro()

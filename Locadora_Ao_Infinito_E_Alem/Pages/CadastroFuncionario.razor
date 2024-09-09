@@ -6,18 +6,18 @@
 
 
 <div class="container">
-    <!-- Barra de navegação temática -->
-    <nav class="navbar navbar-light" style="background-color: navy;">
-        <span class="navbar-brand mb-0 h1 text-white">Locadora ao Infinito e Além</span>
-    </nav>
     <!-- Formulário de Cadastro de Funcionario -->
-    <h2 class="mt-4 text-center text-warning">Cadastro de Funcionário</h2>
+    <h2 class="mt-4 text-start text-warning">Cadastro de Funcionário</h2>
+    <br />
     
     <!-- Mensagem de Sucesso -->
     @if (sucesso)
     {
         <div class="alert alert-success mt-3" role="alert">
             Funcionário salvo com sucesso!
+        </div>
+        <div class="d-flex justify-content-center">
+            <button type="button" class="btn btn-secondary mt-3 mx-2" @onclick="novoRegistro">Novo Registro</button>
         </div>
     } else
     {
@@ -61,6 +61,11 @@
                 </div>
             </div>
         </div>
+
+        <!-- Botões de Ação -->
+        <div class="d-flex justify-content-center">
+            <button type="button" class="btn btn-primary mt-3 mx-2" @onclick="cadastrarFuncionario">Salvar</button>
+        </div>
     }
 
     @if (erro)
@@ -70,11 +75,7 @@
         </div>
     }
 
-    <!-- Botões de Ação -->
-    <div class="d-flex justify-content-center">
-        <button type="button" class="btn btn-primary mt-3 mx-2" @onclick="cadastrarFuncionario" >Salvar</button>
-        <button type="button" class="btn btn-secondary mt-3 mx-2" @onclick="novoRegistro" >Novo Registro</button>
-    </div>
+    
 </div>
 
 @code {

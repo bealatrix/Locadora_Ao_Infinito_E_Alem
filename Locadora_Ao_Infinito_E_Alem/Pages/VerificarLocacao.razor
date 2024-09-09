@@ -1,14 +1,15 @@
-﻿<h3>VerificarLocacao</h3>
-@page "/verificarLocacoes"
+﻿@page "/verificarLocacoes"
 @using Locadora_Ao_Infinito_E_Alem.Models
 @using Locadora_Ao_Infinito_E_Alem.Controllers
 @inject NavigationManager navegacao;
 @inject LocacaoController locacaoController;
+@inject FilmeController filmeController;
 
 <div class="container">
-    <h2 class="mt-4 text-center text-warning">Gerenciar Locações</h2>
+    <h2 class="mt-4 text-start text-warning">Gerenciar Locações</h2>
+    <br />
 
-    <!-- Filtros de Pesquisa -->
+    <!-- Filtros de Pesquisa
     <div class="mb-3">
         <label for="filtroStatus" class="form-label">Filtrar por Status:</label>
         <select @bind="filtroStatus" class="form-select" id="filtroStatus">
@@ -17,7 +18,7 @@
             <option value="Atrasada">Atrasada</option>
             <option value="Finalizada">Finalizada</option>
         </select>
-    </div>
+    </div> -->
 
     <!-- Tabela de Locações -->
     <table class="table table-striped">
@@ -27,8 +28,10 @@
                 <th>Cliente</th>
                 <th>Filmes</th>
                 <th>Valor Total da Locação</th>
+                <th>Data locação</th>
+                <th>Data devolução</th>
                 <th>Status</th>
-                <th>Ações</th>
+                <th></th>
             </tr>
         </thead>
         <tbody>
@@ -45,12 +48,18 @@
                      @valores
                     </td>
                     <td>@locacao.valor_total</td>
+                    <td>@locacao.data_locacao</td>
+                    <td>@locacao.data_devolucao</td>
                     <td>@locacao.Status</td>
                     @if (locacao.Status == "Ativa")
                     {
                     <td>
-                        <button class="btn btn-success btn-sm" @onclick="() => MarcarComoDevolvido(locacao.ID)">Marcar como Devolvido</button>
+                        <button class="btn btn-success btn-sm" @onclick="() => DevolverFilmes(locacao.ID)">Marcar como Finalizada</button>
                     </td>
+                    }
+                    else
+                    {
+                      <td></td>  
                     }
 
                 </tr>
@@ -60,29 +69,31 @@
 </div>
 
 @code {
-
-    private List<Filme>? listaFilmes = new List<Filme>();
     private Locacao locacao = new Locacao();
-
-    private string filtroStatus = "";
+    //private string filtroStatus = "";
     private List<Locacao> locacoes = new List<Locacao>(); // Supondo que esta lista seja preenchida com as locações do banco de dados.
-    private List<Locacao> locacoesFiltradas => locacoes
+    
+    /*private List<Locacao> locacoesFiltradas => locacoes
         .Where(l => string.IsNullOrEmpty(filtroStatus) || l.Status == filtroStatus)
-        .ToList();
+        .ToList();*/
 
     protected override async Task OnInitializedAsync()
     {
         locacoes = await locacaoController.ListarLocacoesComFilmes();
     }
 
-    private async Task MarcarComoDevolvido(int idLocacao)
+    private async Task DevolverFilmes(int idLocacao)
     {
         var locacao = locacoes.FirstOrDefault(l => l.ID == idLocacao);
         if (locacao != null)
         {
             locacao.Status = "Finalizada";
-            
+            foreach(var item in locacao.LocacaoFilmes)
+            {
+                item.Filme.estoque = item.Filme.estoque + 1;
+            }
             await locacaoController.SalvarAlteracoes();
+            await filmeController.SalvarAlteracoes();
         }
         
     }
